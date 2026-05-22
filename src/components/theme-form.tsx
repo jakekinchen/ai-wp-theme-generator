@@ -1,10 +1,8 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
+import { pickRandomBrief, sampleBriefs } from "@/lib/briefs";
 import { GenerationErrorPayload, GenerationResultPayload } from "./types";
-
-const sampleDescription =
-  "A dark mode blog theme for photographers with a large centered hero, sticky navigation, oversized image-led post cards, and warm editorial typography.";
 
 const fieldLabel: Record<string, string> = {
   themeName: "Theme name",
@@ -15,6 +13,8 @@ const fieldLabel: Record<string, string> = {
   typographyPreference: "Typography",
 };
 
+const initialBrief = sampleBriefs[0];
+
 export function ThemeForm({
   error,
   onResult,
@@ -23,16 +23,14 @@ export function ThemeForm({
   onResult: (result: GenerationResultPayload | null, error?: GenerationErrorPayload) => void;
 }) {
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({
-    themeName: "Obsidian Lens",
-    slug: "obsidian-lens",
-    description: sampleDescription,
-    siteType: "blog",
-    preferredPalette: "dark editorial with warm amber accents",
-    typographyPreference: "large serif headings with readable sans body",
-    stickyNavigation: true,
-    includeQueryLoop: true,
-  });
+  const [form, setForm] = useState({ ...initialBrief });
+  const [briefIndex, setBriefIndex] = useState(0);
+
+  function shuffle() {
+    const next = pickRandomBrief(form.slug);
+    setForm({ ...next });
+    setBriefIndex((value) => value + 1);
+  }
 
   const fieldIssues = useMemo(() => {
     const issues = new Map<string, string>();
@@ -79,7 +77,17 @@ export function ThemeForm({
         package an installable theme.
       </p>
 
-      <form onSubmit={submit} className="spec" aria-busy={loading}>
+      <div className="brief__shuffle">
+        <button type="button" className="press press--ghost press--small" onClick={shuffle}>
+          <span className="press__num">⤬</span>
+          Shuffle brief
+        </button>
+        <span className="brief__shuffle-meta">
+          {sampleBriefs.length} curated briefs · roll N° {String(briefIndex).padStart(2, "0")}
+        </span>
+      </div>
+
+      <form onSubmit={submit} className="spec" aria-busy={loading} key={briefIndex}>
         <div className="spec__row spec__row--inline">
           <Field name="themeName" label="Theme name" hint="3 – 80" error={fieldError("themeName")}>
             <input

@@ -325,6 +325,34 @@ textarea:focus-visible {
   color: var(--ink-soft);
 }
 
+.brief__shuffle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  flex-wrap: wrap;
+}
+
+.brief__shuffle-meta {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+@keyframes form-shuffle {
+  0% { opacity: 0.55; transform: translateY(-2px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.spec {
+  animation: form-shuffle 280ms ease-out;
+}
+
 .spec {
   display: grid;
   gap: 1.5rem;
@@ -516,6 +544,17 @@ textarea:focus-visible {
   background: var(--ink);
   color: var(--paper);
   border-color: var(--ink);
+}
+
+.press--small {
+  padding: 0.55rem 0.85rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+}
+
+.press--small .press__num {
+  font-size: 0.85rem;
+  letter-spacing: 0;
 }
 
 /* ---------- failure notice ---------- */
