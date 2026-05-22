@@ -211,10 +211,11 @@ textarea:focus-visible {
 }
 
 .masthead-strip {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
   align-items: center;
+  justify-content: space-between;
   font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.18em;
@@ -222,6 +223,13 @@ textarea:focus-visible {
   color: var(--ink-soft);
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--ink);
+}
+
+.masthead-strip > span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .masthead-strip a {
@@ -884,9 +892,11 @@ textarea:focus-visible {
 .colophon {
   padding: 2.5rem 0 3rem;
   border-top: 1px solid var(--ink);
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  align-items: baseline;
+  justify-content: space-between;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   letter-spacing: 0.16em;
