@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:wp": "tsx scripts/write-fixture-theme.ts && wp-env start && node scripts/wp-smoke-test.mjs"
+    "test:wp": "tsx scripts/write-fixture-theme.ts && wp-env start && node scripts/wp-smoke-test.mjs",
+    "deploy:prod": "vercel build --prod && vercel deploy --prebuilt --prod"
   },
   "dependencies": {
     "@wordpress/block-serialization-default-parser": "^5.46.0",

@@ -1,5 +1,7 @@
 # AI WordPress Theme Generator
 
+Live: **https://ai-wp-theme-generator.vercel.app**
+
 This app turns a user brief into a constrained `ThemePlan`, compiles that plan into a WordPress block theme, validates the generated files, previews the structure, and downloads an installable zip.
 
 ## Run Locally
@@ -78,6 +80,25 @@ Pipeline:
 ## Validation
 
 The validator checks required files, a single safe root folder, valid `style.css` header, valid `theme.json`, allowed core blocks, parseable block markup, no Custom HTML block, no Classic/freeform block, resolved pattern references, no remote scripts or styles, no unsafe paths, and no executable PHP outside controlled pattern headers.
+
+## Deployment
+
+Production runs on Vercel. Git auto-deploys are intentionally disabled in `vercel.json` because Vercel's hosted Next.js 16.2 adapter currently crashes during `modifyConfig`. Deploys instead use the prebuilt artifact path that the local Vercel CLI produces.
+
+GitHub Actions (`.github/workflows/deploy.yml`) runs on every push to `main`:
+
+1. `npm ci && npm run lint && npm test`
+2. `vercel pull`
+3. `vercel build --prod`
+4. `vercel deploy --prebuilt --prod`
+
+Required GitHub secrets: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
+
+To deploy from a workstation:
+
+```bash
+npm run deploy:prod
+```
 
 ## Known Limitations
 
