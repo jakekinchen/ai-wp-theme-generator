@@ -1,18 +1,44 @@
 import { ThemeFileMap } from "@/lib/compiler/file-map";
 
-export function FileTree({ files, selectedPath, onSelect }: { files: ThemeFileMap; selectedPath: string; onSelect: (path: string) => void }) {
+const LEADER = ".".repeat(120);
+
+export function FileTree({
+  files,
+  selectedPath,
+  onSelect,
+}: {
+  files: ThemeFileMap;
+  selectedPath: string;
+  onSelect: (path: string) => void;
+}) {
   return (
-    <div className="max-h-80 overflow-auto rounded border border-slate-200">
-      {files.map((file) => (
-        <button
-          key={file.path}
-          type="button"
-          onClick={() => onSelect(file.path)}
-          className={`block w-full border-b border-slate-100 px-3 py-2 text-left font-mono text-xs last:border-b-0 ${file.path === selectedPath ? "bg-slate-900 text-white" : "hover:bg-slate-50"}`}
-        >
-          {file.path}
-        </button>
-      ))}
+    <div className="index-list" role="listbox" aria-label="Generated files">
+      {files.map((file, index) => {
+        const isSelected = file.path === selectedPath;
+        const bytes = file.content.length;
+        return (
+          <button
+            key={file.path}
+            type="button"
+            className="index-row"
+            onClick={() => onSelect(file.path)}
+            aria-selected={isSelected}
+            role="option"
+          >
+            <span className="index-row__num">{String(index + 1).padStart(2, "0")}</span>
+            <span className="index-row__path">
+              <span>{file.path}</span>
+              <span className="index-row__leader" aria-hidden>{LEADER}</span>
+            </span>
+            <span className="index-row__bytes">{formatBytes(bytes)}</span>
+          </button>
+        );
+      })}
     </div>
   );
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  return `${(bytes / 1024).toFixed(1)} KB`;
 }

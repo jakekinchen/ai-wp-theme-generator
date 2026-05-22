@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { DownloadButton } from "./download-button";
 import { FileTree } from "./file-tree";
 import { FileViewer } from "./file-viewer";
+import { SectionHead } from "./section-head";
 import { ThemePreview } from "./theme-preview";
 import { GenerationResultPayload } from "./types";
 import { ValidationReport } from "./validation-report";
@@ -12,25 +13,98 @@ export function GenerationResult({ result }: { result: GenerationResultPayload }
   const firstPath = result.files[0]?.path ?? "";
   const [selectedPath, setSelectedPath] = useState(firstPath);
   const selected = useMemo(() => selectedPath || firstPath, [firstPath, selectedPath]);
+  const totalBytes = useMemo(
+    () => result.files.reduce((sum, file) => sum + file.content.length, 0),
+    [result.files],
+  );
 
   return (
-    <div className="grid gap-8">
-      <section className="grid gap-2">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-semibold">{result.plan.meta.name}</h2>
-            <p className="text-sm text-slate-600">{result.plan.design.rationale}</p>
+    <div style={{ display: "grid", gap: "clamp(2.5rem, 4vw, 3.5rem)" }}>
+      <section className="section">
+        <SectionHead
+          id="02"
+          title="The proof."
+          meta={`Direction · ${result.plan.design.direction.replace(/-/g, " ")}`}
+        />
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr)",
+            gap: "1.25rem",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "1rem",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
+            }}
+          >
+            <div style={{ display: "grid", gap: "0.35rem" }}>
+              <div className="label">Volume title</div>
+              <div
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontVariationSettings: "\"opsz\" 144",
+                  fontSize: "clamp(2rem, 4vw, 3.2rem)",
+                  lineHeight: 0.95,
+                  letterSpacing: "-0.025em",
+                }}
+              >
+                {result.plan.meta.name}
+              </div>
+            </div>
+            <DownloadButton
+              zipBase64={result.zipBase64}
+              disabled={result.validation.status !== "passed"}
+              slug={result.plan.meta.slug}
+            />
           </div>
-          <DownloadButton zipBase64={result.zipBase64} disabled={result.validation.status !== "passed"} />
+          <p className="preview__rationale" style={{ marginTop: "0.25rem" }}>
+            “{result.plan.design.rationale}”
+          </p>
+        </div>
+
+        <div className="preview-frame">
+          <ThemePreview plan={result.plan} />
         </div>
       </section>
-      <ThemePreview plan={result.plan} />
-      <ValidationReport validation={result.validation} />
-      <section className="grid gap-3">
-        <h2 className="text-lg font-semibold">Generated files</h2>
-        <div className="grid gap-3 lg:grid-cols-[minmax(220px,320px)_1fr]">
-          <FileTree files={result.files} selectedPath={selected} onSelect={setSelectedPath} />
-          <FileViewer files={result.files} path={selected} />
+
+      <section className="section">
+        <SectionHead
+          id="03"
+          title="The proofreader."
+          meta={`${result.validation.checks.length} checks`}
+        />
+        <ValidationReport validation={result.validation} />
+      </section>
+
+      <section className="section">
+        <SectionHead
+          id="04"
+          title="The bound index."
+          meta={`${result.files.length} files · ${(totalBytes / 1024).toFixed(1)} KB uncompressed`}
+        />
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr)",
+            gap: "1.5rem",
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 1fr)",
+              gap: "1.5rem",
+            }}
+          >
+            <FileTree files={result.files} selectedPath={selected} onSelect={setSelectedPath} />
+            <FileViewer files={result.files} path={selected} />
+          </div>
         </div>
       </section>
     </div>
