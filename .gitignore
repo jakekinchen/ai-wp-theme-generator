@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/.wp-env/themes/
 
 # next.js
 /.next/

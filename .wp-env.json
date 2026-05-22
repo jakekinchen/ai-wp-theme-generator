@@ -1,0 +1,9 @@
+{
+  "core": null,
+  "plugins": [],
+  "themes": [
+    "./.wp-env/themes/obsidian-lens",
+    "./.wp-env/themes/plain-signal",
+    "./.wp-env/themes/archive-daily"
+  ]
+}
