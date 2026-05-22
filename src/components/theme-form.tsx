@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
-import { pickRandomBrief, sampleBriefs } from "@/lib/briefs";
+import { pickRandomBrief, sampleBriefs, type SampleBrief } from "@/lib/briefs";
 import { GenerationErrorPayload, GenerationResultPayload } from "./types";
 
 const fieldLabel: Record<string, string> = {
@@ -118,7 +118,7 @@ export function ThemeForm({
             <select
               className="spec__select"
               value={form.siteType}
-              onChange={(event) => setForm({ ...form, siteType: event.target.value })}
+              onChange={(event) => setForm({ ...form, siteType: event.target.value as SampleBrief["siteType"] })}
             >
               {["blog", "portfolio", "agency", "magazine", "newsletter"].map((type) => (
                 <option key={type}>{type}</option>
