@@ -34,8 +34,9 @@ export function ThemeWorkbench() {
         </h1>
         <div className="masthead-standfirst reveal reveal-3">
           A constrained brief is set in serif, a deterministic compiler casts the type,
-          a layered validator reads proofs, and a single bundled <strong>.zip</strong> is sent
-          to press &mdash; without ever asking a language model to write WordPress markup by hand.
+          a layered validator reads proofs, and a single bundled <strong>.zip</strong>
+          {" "}is sent to press &mdash; without ever asking a language model to write
+          WordPress markup by hand.
         </div>
         <div className="masthead-meta reveal reveal-4">
           <div>
