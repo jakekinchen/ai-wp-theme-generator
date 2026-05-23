@@ -1,10 +1,13 @@
 import { ThemePlan } from "@/lib/theme-plan/types";
+import { recipeForDirection } from "@/lib/design/recipes";
 import { contrastRatio } from "./contrast";
 import { fail, pass, warn, ValidationCheck } from "./validation-report";
 
 export function validateDesignQuality(plan: ThemePlan): ValidationCheck[] {
   const checks: ValidationCheck[] = [];
   const { background, foreground, primary, accent } = plan.design.palette;
+  const recipe = recipeForDirection(plan.design.direction);
+  const query = plan.homepage.find((section) => section.kind === "query-grid");
   const bodyContrast = contrastRatio(background, foreground);
   const primaryContrast = contrastRatio(background, primary);
   const headings = plan.homepage.map((section) => "heading" in section ? section.heading : "").filter(Boolean);
@@ -44,6 +47,26 @@ export function validateDesignQuality(plan: ThemePlan): ValidationCheck[] {
     duplicateHeadings.length === 0
       ? pass("no-duplicate-section-headings", "No duplicate section headings")
       : warn("no-duplicate-section-headings", "No duplicate section headings", duplicateHeadings.join(", ")),
+  );
+  checks.push(
+    plan.design.intent.signatureMove.length >= 24
+      ? pass("specific-signature-move", "Design intent has a specific signature move")
+      : fail("specific-signature-move", "Design intent has a specific signature move"),
+  );
+  checks.push(
+    new Set(plan.design.intent.personality).size === plan.design.intent.personality.length
+      ? pass("distinct-personality-tags", "Personality tags are distinct")
+      : warn("distinct-personality-tags", "Personality tags are distinct"),
+  );
+  checks.push(
+    query?.cardStyle === recipe.cardStyle
+      ? pass("recipe-card-style-match", "Card treatment matches design recipe")
+      : warn("recipe-card-style-match", "Card treatment matches design recipe", `Expected ${recipe.cardStyle}`),
+  );
+  checks.push(
+    plan.design.intent.contentDensity === "high" && query && query.columns < 3
+      ? warn("density-layout-match", "Content density matches layout", "High-density themes should use at least three columns.")
+      : pass("density-layout-match", "Content density matches layout"),
   );
 
   return checks;

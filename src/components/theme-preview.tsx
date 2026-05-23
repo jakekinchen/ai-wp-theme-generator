@@ -23,7 +23,7 @@ export function ThemePreview({ plan }: { plan: ThemePlan }) {
         <span>† crop marks</span>
         <span>
           {plan.design.layout.contentWidth}px · {plan.design.layout.spacing} ·{" "}
-          {plan.design.typography.scale}
+          {plan.design.typography.scale} · {plan.design.intent.contentDensity}
         </span>
       </div>
 
@@ -263,7 +263,7 @@ export function ThemePreview({ plan }: { plan: ThemePlan }) {
             textAlign: "right",
           }}
         >
-          Structural preview · rendered from the generated ThemePlan
+          Structural preview · {plan.design.intent.signatureMove}
         </p>
       </div>
 

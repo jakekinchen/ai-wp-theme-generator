@@ -18,4 +18,10 @@ describe("ThemePlanSchema", () => {
   it("rejects unsupported design directions", () => {
     expect(ThemePlanSchema.safeParse({ ...photographyThemePlan, design: { ...photographyThemePlan.design, direction: "space-cowboy" } }).success).toBe(false);
   });
+
+  it("requires structured design intent", () => {
+    const designWithoutIntent: Partial<typeof photographyThemePlan.design> = { ...photographyThemePlan.design };
+    delete designWithoutIntent.intent;
+    expect(ThemePlanSchema.safeParse({ ...photographyThemePlan, design: designWithoutIntent }).success).toBe(false);
+  });
 });

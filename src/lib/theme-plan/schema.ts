@@ -12,6 +12,31 @@ export const DesignDirectionSchema = z.enum([
   "warm-newsletter",
 ]);
 
+export const DesignPersonalitySchema = z.enum([
+  "cinematic",
+  "calm",
+  "precise",
+  "archival",
+  "premium",
+  "warm",
+  "stark",
+  "literary",
+  "utilitarian",
+  "expressive",
+]);
+
+export const DesignIntentSchema = z.object({
+  audience: z.string().min(8).max(160),
+  personality: z.array(DesignPersonalitySchema).min(2).max(5),
+  hierarchy: z.enum(["quiet", "balanced", "dramatic", "dense"]),
+  contentDensity: z.enum(["low", "medium", "high"]),
+  imageTreatment: z.enum(["none", "framed", "bleed", "editorial-crop", "duotone-field"]),
+  rhythm: z.enum(["linear", "alternating", "front-loaded", "archive-first"]),
+  navStyle: z.enum(["minimal", "editorial", "index", "portfolio"]),
+  surface: z.enum(["flat", "bordered", "layered", "paper"]),
+  signatureMove: z.string().min(12).max(180),
+});
+
 export const HeroSectionSchema = z.object({
   kind: z.literal("hero"),
   eyebrow: z.string().min(1).max(80),
@@ -65,6 +90,7 @@ export const ThemePlanSchema = z.object({
   design: z.object({
     direction: DesignDirectionSchema,
     rationale: z.string().min(20).max(600),
+    intent: DesignIntentSchema,
     palette: z.object({
       background: hexColor,
       foreground: hexColor,

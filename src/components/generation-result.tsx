@@ -68,6 +68,33 @@ export function GenerationResult({ result }: { result: GenerationResultPayload }
           </p>
         </div>
 
+        {result.designSelection && (
+          <div className="design-desk" aria-label="Design selection">
+            <div className="design-desk__lead">
+              <span className="label">Design desk</span>
+              <strong>{result.designSelection.criticSummary}</strong>
+              <span>{result.designSelection.selectedScore}/100 · selected {result.designSelection.selectedId}</span>
+            </div>
+            <div className="design-desk__grid">
+              {result.designSelection.candidates.map((candidate) => (
+                <article
+                  className="design-desk__candidate"
+                  data-selected={candidate.id === result.designSelection?.selectedId ? "true" : "false"}
+                  key={candidate.id}
+                >
+                  <div>
+                    <span className="label">{candidate.role.replace(/-/g, " ")}</span>
+                    <strong>{candidate.direction.replace(/-/g, " ")}</strong>
+                  </div>
+                  <div className="design-desk__score">{candidate.score}</div>
+                  <p>{candidate.verdict}</p>
+                  <small>{candidate.strengths[0] ?? candidate.risks[0] ?? "Design candidate scored locally."}</small>
+                </article>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="preview-frame">
           <ThemePreview plan={result.plan} />
         </div>

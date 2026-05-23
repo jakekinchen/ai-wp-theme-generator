@@ -138,6 +138,8 @@ const baseRules = `
 
 export function renderStyleCss(plan: ThemePlan): string {
   const hints = directionStyleHints(plan.design.direction);
+  const densityGap = plan.design.intent.contentDensity === "high" ? "0.75rem" : plan.design.intent.contentDensity === "low" ? "2rem" : "1.25rem";
+  const surfaceShadow = plan.design.intent.surface === "layered" ? "0 20px 60px color-mix(in srgb, currentColor 10%, transparent)" : "none";
   const radiusSmall = plan.design.layout.radius === "none" ? "0" : plan.design.layout.radius === "pill" ? "999px" : plan.design.layout.radius === "rounded" ? "14px" : "6px";
   const radiusLarge = plan.design.layout.radius === "none" ? "0" : plan.design.layout.radius === "pill" ? "999px" : plan.design.layout.radius === "rounded" ? "24px" : "12px";
   return `/*
@@ -175,6 +177,47 @@ ${baseRules}
 
 .hero-pattern {
   ${hints.heroExtra}
+}
+
+.hero-pattern.image-framed,
+.surface-layered > * {
+  box-shadow: ${surfaceShadow};
+}
+
+.hero-pattern.image-bleed {
+  margin-inline: calc(50% - 50vw);
+  padding-inline: max(2rem, calc((100vw - var(--wp--style--global--wide-size)) / 2));
+}
+
+.hero-pattern.image-duotone-field {
+  filter: saturate(0.86) contrast(1.08);
+}
+
+.hierarchy-dramatic h1 {
+  font-size: clamp(3.4rem, 10vw, 7.5rem);
+}
+
+.hierarchy-dense h1 {
+  font-size: clamp(2.2rem, 6vw, 4.5rem);
+  text-transform: uppercase;
+}
+
+.density-high .wp-block-post-template {
+  gap: ${densityGap};
+}
+
+.density-low .wp-block-post-template {
+  gap: ${densityGap};
+}
+
+.nav-index {
+  font-family: var(--wp--preset--font-family--heading);
+  text-transform: uppercase;
+}
+
+.nav-portfolio {
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
 }
 `;
 }

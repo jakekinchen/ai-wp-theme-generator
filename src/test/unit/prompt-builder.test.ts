@@ -12,6 +12,7 @@ describe("buildThemePlanPrompt", () => {
     expect(prompt).toContain("Do not use Custom HTML block");
     expect(prompt).toContain("editorial-noir");
     expect(prompt).toContain("query-grid");
+    expect(prompt).toContain("design.intent");
     expect(prompt).toContain("obsidian-lens");
     expect(prompt).not.toContain("generate a zip");
     expect(prompt).not.toContain("serialize WordPress block markup");

@@ -1,4 +1,5 @@
 import { ZodError } from "zod";
+import { generateThemePlanWithDesignPipeline } from "@/lib/ai/design-pipeline";
 import { getThemePlannerProvider } from "@/lib/ai/provider";
 import { compileTheme } from "@/lib/compiler/compile-theme";
 import { packageTheme } from "@/lib/packaging/package-theme";
@@ -72,7 +73,8 @@ export async function POST(request: Request) {
     }
     const raw = (await readBoundedJson(request)) as ThemeInput;
     const input = normalizeThemeInput(raw);
-    const plan = await getThemePlannerProvider().generateThemePlan(input);
+    const designResult = await generateThemePlanWithDesignPipeline(input, getThemePlannerProvider());
+    const plan = designResult.plan;
     const planValidation = validateThemePlan(plan);
     if (planValidation.status === "failed") {
       throw new ThemePlanValidationError("Generated ThemePlan failed validation.", planValidation);
@@ -85,6 +87,7 @@ export async function POST(request: Request) {
     const zip = await packageTheme(files);
     return Response.json({
       plan,
+      designSelection: designResult.selection,
       files,
       validation,
       zipBase64: zip.toString("base64"),

@@ -1,3 +1,4 @@
+import { intentFromRecipe, recipeForDirection } from "@/lib/design/recipes";
 import { directionDefaults } from "./defaults";
 import { ThemePlan } from "./types";
 
@@ -38,36 +39,6 @@ const directionEyebrows: Record<DirectionKey, string> = {
   "warm-newsletter": "From the kitchen table",
 };
 
-const directionHeroVisual: Record<DirectionKey, "centered" | "split" | "cover" | "editorial"> = {
-  "editorial-noir": "centered",
-  "soft-studio": "split",
-  "brutalist-index": "editorial",
-  "luxury-portfolio": "cover",
-  "magazine-archive": "editorial",
-  "minimalist-agency": "split",
-  "warm-newsletter": "centered",
-};
-
-const directionCardStyle: Record<DirectionKey, "bordered" | "image-led" | "minimal" | "magazine"> = {
-  "editorial-noir": "image-led",
-  "soft-studio": "bordered",
-  "brutalist-index": "minimal",
-  "luxury-portfolio": "image-led",
-  "magazine-archive": "magazine",
-  "minimalist-agency": "bordered",
-  "warm-newsletter": "minimal",
-};
-
-const directionColumns: Record<DirectionKey, 2 | 3 | 4> = {
-  "editorial-noir": 3,
-  "soft-studio": 3,
-  "brutalist-index": 4,
-  "luxury-portfolio": 2,
-  "magazine-archive": 4,
-  "minimalist-agency": 3,
-  "warm-newsletter": 2,
-};
-
 const siteTypeDirectionHints: Record<string, DirectionKey> = {
   blog: "editorial-noir",
   portfolio: "luxury-portfolio",
@@ -90,6 +61,7 @@ export function chooseDirection(input?: { description?: string; siteType?: strin
 }
 
 function heroSection(context: SectionInput) {
+  const recipe = recipeForDirection(context.direction);
   const navAside = context.stickyNavigation ? "with sticky navigation" : "with classic navigation";
   return {
     kind: "hero" as const,
@@ -98,7 +70,7 @@ function heroSection(context: SectionInput) {
     subheading: `An honest, ${context.direction.replace("-", " ")} reading experience ${navAside}, generated from a constrained design plan.`,
     primaryButtonLabel: context.siteType === "newsletter" ? "Subscribe" : "Read the latest",
     primaryButtonUrl: "/",
-    visualStyle: directionHeroVisual[context.direction],
+    visualStyle: recipe.heroVisual,
   };
 }
 
@@ -123,13 +95,14 @@ function splitIntroSection(context: SectionInput) {
 }
 
 function queryGridSection(context: SectionInput) {
+  const recipe = recipeForDirection(context.direction);
   return {
     kind: "query-grid" as const,
     heading: context.siteType === "magazine" ? "Recent dispatches" : "Latest stories",
-    columns: directionColumns[context.direction],
-    showExcerpt: directionCardStyle[context.direction] !== "minimal",
+    columns: recipe.columns,
+    showExcerpt: recipe.excerpt,
     showDate: true,
-    cardStyle: directionCardStyle[context.direction],
+    cardStyle: recipe.cardStyle,
   };
 }
 
@@ -153,7 +126,20 @@ export function buildFixtureThemePlan(input?: {
   includeQueryLoop?: boolean;
 }): ThemePlan {
   const direction = chooseDirection(input);
+  return buildThemePlanForDirection(direction, input);
+}
+
+export function buildThemePlanForDirection(direction: DirectionKey, input?: {
+  themeName?: string;
+  slug?: string;
+  description?: string;
+  preferredPalette?: string;
+  siteType?: string;
+  stickyNavigation?: boolean;
+  includeQueryLoop?: boolean;
+}): ThemePlan {
   const defaults = directionDefaults[direction];
+  const recipe = recipeForDirection(direction);
   const name = input?.themeName?.trim() || "Obsidian Lens";
   const slug = input?.slug?.trim() || "obsidian-lens";
   const description =
@@ -186,6 +172,7 @@ export function buildFixtureThemePlan(input?: {
     design: {
       direction,
       rationale: directionRationales[direction],
+      intent: intentFromRecipe(recipe),
       palette: { ...defaults.palette },
       typography: { ...defaults.typography },
       layout: { ...defaults.layout },

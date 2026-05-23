@@ -2,7 +2,7 @@
 
 Live: **https://ai-wp-theme-generator.vercel.app**
 
-This app turns a user brief into a constrained `ThemePlan`, compiles that plan into a WordPress block theme, validates the generated files, previews the structure, and downloads an installable zip.
+This app turns a user brief into constrained `ThemePlan` candidates, scores them with a local design critic, compiles the selected plan into a WordPress block theme, validates the generated files, previews the structure, and downloads an installable zip.
 
 ## Run Locally
 
@@ -65,17 +65,23 @@ Install the downloaded zip in WordPress as a block theme.
 
 ## Architecture
 
-The AI never writes WordPress files directly. It returns a constrained `ThemePlan`. The deterministic compiler owns the block markup, `theme.json`, paths, PHP pattern headers, and packaging. Validation runs before zip creation and rejects unsafe or unsupported output.
+The AI never writes WordPress files directly. It returns a constrained `ThemePlan`. The app enriches that with local recipe candidates, scores the candidates for design fit, and compiles the selected plan. The deterministic compiler owns the block markup, `theme.json`, paths, PHP pattern headers, and packaging. Validation runs before zip creation and rejects unsafe or unsupported output.
 
 Pipeline:
 
 1. Normalize and validate user input.
-2. Generate a `ThemePlan` with the mock or OpenAI provider.
-3. Validate the `ThemePlan` schema and design quality.
-4. Compile deterministic WordPress block-theme files.
-5. Validate file paths, block markup, pattern references, theme JSON, and security rules.
-6. Package the validated files as a zip.
-7. Render a structural preview from the same `ThemePlan`.
+2. Generate a provider-authored `ThemePlan`.
+3. Add local brief-match, expressive-alt, and safe-baseline recipe candidates.
+4. Score candidates for prompt fit, accessible contrast, section rhythm, content density, recipe alignment, and specificity.
+5. Validate the selected `ThemePlan` schema and design quality.
+6. Compile deterministic WordPress block-theme files.
+7. Validate file paths, block markup, pattern references, theme JSON, and security rules.
+8. Package the validated files as a zip.
+9. Render a structural preview from the same `ThemePlan`.
+
+## Design Intelligence
+
+Each `ThemePlan` carries explicit `design.intent`: audience, personality, hierarchy, content density, image treatment, rhythm, navigation style, surface language, and a signature move. Local recipes map supported design directions to hero variants, card treatments, spacing, typography, and compiler classes. The API returns a `designSelection` report so reviewers can see which candidate won and why.
 
 ## Validation
 
@@ -104,6 +110,6 @@ npm run deploy:prod
 
 - The preview is structural React rendering, not a live WordPress instance.
 - The optional `wp-env` smoke test requires Docker and was kept out of the normal test path.
-- Design recipes are intentionally small.
-- The OpenAI JSON schema is deliberately broad at the API boundary; the local Zod schema is the authority.
+- Design recipes are stronger than the first MVP, but still small compared with a mature pattern library.
+- The OpenAI JSON schema is generated from the local Zod schema, then transformed for strict Responses API compatibility.
 - The app returns base64 zip data for MVP simplicity.

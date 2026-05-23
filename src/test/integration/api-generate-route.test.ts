@@ -32,6 +32,8 @@ describe("POST /api/generate", () => {
     expect(response.status).toBe(200);
     const payload = await response.json();
     expect(payload.validation.status).toBe("passed");
+    expect(payload.designSelection.selectedScore).toBeGreaterThanOrEqual(70);
+    expect(payload.designSelection.candidates.length).toBeGreaterThanOrEqual(2);
     expect(payload.plan.meta.slug).toBe("plain-signal");
     expect(payload.files.some((file: { path: string }) => file.path.endsWith("templates/index.html"))).toBe(true);
     const zip = await JSZip.loadAsync(Buffer.from(payload.zipBase64, "base64"));

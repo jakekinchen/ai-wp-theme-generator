@@ -10,4 +10,15 @@ describe("design quality validation", () => {
     }).status).toBe("failed");
     expect(validateThemePlan({ ...photographyThemePlan, homepage: photographyThemePlan.homepage.filter((section) => section.kind !== "hero") }).status).toBe("failed");
   });
+
+  it("warns when card treatment drifts away from the design recipe", () => {
+    const drifted = {
+      ...photographyThemePlan,
+      homepage: photographyThemePlan.homepage.map((section) =>
+        section.kind === "query-grid" ? { ...section, cardStyle: "minimal" as const } : section,
+      ),
+    };
+    const validation = validateThemePlan(drifted);
+    expect(validation.checks.some((check) => check.id === "recipe-card-style-match" && check.status === "warning")).toBe(true);
+  });
 });

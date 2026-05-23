@@ -16,7 +16,7 @@ export function renderHeaderPart(plan: ThemePlan): string {
     block("site-title", { level: 0 }),
     block("navigation", { overlayMenu: "mobile" }, block("page-list", {})),
   ].join("\n");
-  const className = plan.navigation.sticky ? "site-header is-sticky" : "site-header";
+  const className = `${plan.navigation.sticky ? "site-header is-sticky" : "site-header"} nav-${plan.design.intent.navStyle}`;
   return block("group", { tagName: "header", className, layout: { type: "flex", justifyContent: "space-between" } }, `<div class="wp-block-group site-header__inner">\n${inner}\n</div>`);
 }
 
@@ -31,7 +31,7 @@ export function renderFooterPart(plan: ThemePlan): string {
 
 export function renderHeroPattern(plan: ThemePlan): string {
   const hero = plan.homepage.find((section): section is Extract<ThemeSection, { kind: "hero" }> => section.kind === "hero")!;
-  return [patternHeader("Hero", `${plan.meta.slug}/hero`), renderHero(hero)].join("\n");
+  return [patternHeader("Hero", `${plan.meta.slug}/hero`), renderHero(hero, plan.design.intent)].join("\n");
 }
 
 export function renderSplitIntroPattern(plan: ThemePlan): string {
@@ -51,7 +51,7 @@ export function renderFeaturedQueryPattern(plan: ThemePlan): string {
     showDate: query?.showDate ?? true,
     showExcerpt: query?.showExcerpt ?? true,
     cardStyle,
-  }), `query-${cardStyle}`)].join("\n");
+  }), `query-${cardStyle} density-${plan.design.intent.contentDensity} surface-${plan.design.intent.surface}`)].join("\n");
 }
 
 export function renderArchiveQueryPattern(plan: ThemePlan): string {
@@ -63,7 +63,7 @@ export function renderArchiveQueryPattern(plan: ThemePlan): string {
     showDate: true,
     showExcerpt: true,
     cardStyle,
-  }), `archive-query query-${cardStyle}`)].join("\n");
+  }), `archive-query query-${cardStyle} density-${plan.design.intent.contentDensity} surface-${plan.design.intent.surface}`)].join("\n");
 }
 
 export function renderPostHeaderPattern(plan: ThemePlan): string {

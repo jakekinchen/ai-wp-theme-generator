@@ -6,8 +6,8 @@
   --paper-edge: #cdc1a4;
   --ink: #161311;
   --ink-soft: #3c3530;
-  --ink-mute: #79706a;
-  --accent: #c8341a;
+  --ink-mute: #615852;
+  --accent: #b22a14;
   --accent-soft: #f0c5b5;
   --rule: rgba(22, 19, 17, 0.16);
   --rule-strong: rgba(22, 19, 17, 0.85);
@@ -573,7 +573,7 @@ textarea:focus-visible {
   font-size: 0.72rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--ink);
 }
 
 .notice__body {
@@ -599,7 +599,7 @@ textarea:focus-visible {
 }
 
 .notice li strong {
-  color: var(--accent);
+  color: var(--ink);
   margin-right: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -678,7 +678,7 @@ textarea:focus-visible {
 }
 
 .audit__row--warning .audit__glyph {
-  color: #b07a1e;
+  color: #8c5d12;
 }
 
 .audit__label {
@@ -875,6 +875,92 @@ textarea:focus-visible {
   line-height: 1.6;
   color: var(--ink-soft);
   max-width: 56ch;
+}
+
+.design-desk {
+  border: 1px solid var(--ink);
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  background:
+    linear-gradient(90deg, rgba(27, 23, 19, 0.05) 1px, transparent 1px),
+    var(--paper);
+  background-size: 16px 16px;
+}
+
+.design-desk__lead {
+  display: grid;
+  gap: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.design-desk__lead strong {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.35;
+  text-transform: none;
+}
+
+.design-desk__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.75rem;
+}
+
+.design-desk__candidate {
+  border: 1px solid rgba(27, 23, 19, 0.22);
+  background: rgba(244, 238, 226, 0.8);
+  display: grid;
+  gap: 0.65rem;
+  min-height: 11rem;
+  padding: 0.85rem;
+}
+
+.design-desk__candidate[data-selected="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.design-desk__candidate strong {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.05;
+  margin-top: 0.35rem;
+  text-transform: capitalize;
+}
+
+.design-desk__candidate p,
+.design-desk__candidate small {
+  margin: 0;
+}
+
+.design-desk__candidate p {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.design-desk__candidate small {
+  font-family: var(--font-serif);
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.design-desk__score {
+  align-self: end;
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-variation-settings: "opsz" 144;
+  line-height: 0.9;
 }
 
 /* ---------- responsive masthead title scale ---------- */

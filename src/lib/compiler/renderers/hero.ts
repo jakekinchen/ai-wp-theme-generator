@@ -12,12 +12,23 @@ export type HeroInput = {
   visualStyle: "centered" | "split" | "cover" | "editorial";
 };
 
+type HeroDesignIntent = {
+  imageTreatment: "none" | "framed" | "bleed" | "editorial-crop" | "duotone-field";
+  hierarchy: "quiet" | "balanced" | "dramatic" | "dense";
+  signatureMove: string;
+};
+
+function intentClass(intent?: HeroDesignIntent): string {
+  if (!intent) return "";
+  return ` image-${intent.imageTreatment} hierarchy-${intent.hierarchy}`;
+}
+
 function ctaBlock(input: HeroInput, align: "left" | "center"): string {
   if (!input.primaryButtonLabel || !input.primaryButtonUrl) return "";
   return renderButtonsBlock(input.primaryButtonLabel, input.primaryButtonUrl, align);
 }
 
-function centeredHero(input: HeroInput): string {
+function centeredHero(input: HeroInput, intent?: HeroDesignIntent): string {
   const inner = [
     renderParagraphBlock({ content: input.eyebrow, align: "center", className: "eyebrow" }),
     renderHeadingBlock({ content: input.heading, level: 1, align: "center" }),
@@ -26,12 +37,12 @@ function centeredHero(input: HeroInput): string {
   ].filter(Boolean).join("\n");
   return block(
     "group",
-    { tagName: "section", className: "hero-pattern hero-centered", layout: { type: "constrained" } },
-    `<section class="wp-block-group hero-pattern hero-centered">\n${inner}\n</section>`,
+    { tagName: "section", className: `hero-pattern hero-centered${intentClass(intent)}`, layout: { type: "constrained" } },
+    `<section class="wp-block-group hero-pattern hero-centered${intentClass(intent)}">\n${inner}\n</section>`,
   );
 }
 
-function splitHero(input: HeroInput): string {
+function splitHero(input: HeroInput, intent?: HeroDesignIntent): string {
   const textColumn = block(
     "column",
     { width: "60%" },
@@ -53,12 +64,12 @@ function splitHero(input: HeroInput): string {
   );
   return block(
     "group",
-    { tagName: "section", className: "hero-pattern hero-split", layout: { type: "constrained" } },
-    `<section class="wp-block-group hero-pattern hero-split">\n${block("columns", { verticalAlignment: "center" }, [textColumn, asideColumn].join("\n"))}\n</section>`,
+    { tagName: "section", className: `hero-pattern hero-split${intentClass(intent)}`, layout: { type: "constrained" } },
+    `<section class="wp-block-group hero-pattern hero-split${intentClass(intent)}">\n${block("columns", { verticalAlignment: "center" }, [textColumn, asideColumn].join("\n"))}\n</section>`,
   );
 }
 
-function coverHero(input: HeroInput): string {
+function coverHero(input: HeroInput, intent?: HeroDesignIntent): string {
   const inner = [
     renderParagraphBlock({ content: input.eyebrow, align: "center", className: "eyebrow" }),
     renderHeadingBlock({ content: input.heading, level: 1, align: "center" }),
@@ -67,12 +78,12 @@ function coverHero(input: HeroInput): string {
   ].filter(Boolean).join("\n");
   return block(
     "group",
-    { tagName: "section", className: "hero-pattern hero-cover", layout: { type: "constrained" } },
-    `<section class="wp-block-group hero-pattern hero-cover">\n${inner}\n</section>`,
+    { tagName: "section", className: `hero-pattern hero-cover${intentClass(intent)}`, layout: { type: "constrained" } },
+    `<section class="wp-block-group hero-pattern hero-cover${intentClass(intent)}">\n${inner}\n</section>`,
   );
 }
 
-function editorialHero(input: HeroInput): string {
+function editorialHero(input: HeroInput, intent?: HeroDesignIntent): string {
   const inner = [
     renderParagraphBlock({ content: input.eyebrow, className: "eyebrow hero-eyebrow--large" }),
     renderHeadingBlock({ content: input.heading, level: 1 }),
@@ -82,14 +93,14 @@ function editorialHero(input: HeroInput): string {
   ].filter(Boolean).join("\n");
   return block(
     "group",
-    { tagName: "section", className: "hero-pattern hero-editorial", layout: { type: "constrained" } },
-    `<section class="wp-block-group hero-pattern hero-editorial">\n${inner}\n</section>`,
+    { tagName: "section", className: `hero-pattern hero-editorial${intentClass(intent)}`, layout: { type: "constrained" } },
+    `<section class="wp-block-group hero-pattern hero-editorial${intentClass(intent)}">\n${inner}\n</section>`,
   );
 }
 
-export function renderHero(input: HeroInput): string {
-  if (input.visualStyle === "split") return splitHero(input);
-  if (input.visualStyle === "cover") return coverHero(input);
-  if (input.visualStyle === "editorial") return editorialHero(input);
-  return centeredHero(input);
+export function renderHero(input: HeroInput, intent?: HeroDesignIntent): string {
+  if (input.visualStyle === "split") return splitHero(input, intent);
+  if (input.visualStyle === "cover") return coverHero(input, intent);
+  if (input.visualStyle === "editorial") return editorialHero(input, intent);
+  return centeredHero(input, intent);
 }
